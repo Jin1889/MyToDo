@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using MyTodo.Extensions;
+using Prism.Events;
 
 namespace MyTodo.Views
 {
@@ -20,9 +10,19 @@ namespace MyTodo.Views
     /// </summary>
     public partial class MainView : Window
     {
-        public MainView()
+        public MainView(IEventAggregator aggregator)
         {
             InitializeComponent();
+
+            //注册等待消息窗口
+            aggregator.Register(arg =>
+            {
+                DialogHost.IsOpen = arg.IsOpen;
+                if (arg.IsOpen)
+                {
+                    DialogHost.DialogContent = new ProgressView();
+                }
+            });
 
             btnMin.Click += (s, e) => { this.WindowState = WindowState.Minimized; };
             btnMax.Click += (s, e) =>

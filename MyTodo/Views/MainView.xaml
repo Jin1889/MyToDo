@@ -24,6 +24,7 @@
     WindowStyle="None"
     mc:Ignorable="d">
     <materialDesign:DialogHost
+        x:Name="DialogHost"
         DialogTheme="Inherit"
         Identifier="RootDialog"
         SnackbarMessageQueue="{Binding ElementName=MainSnackbar, Path=MessageQueue}">
