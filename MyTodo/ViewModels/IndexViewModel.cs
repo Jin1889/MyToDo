@@ -1,5 +1,4 @@
 ﻿using MyTodo.Common.Models;
-using MyToDo.Shared.Dtos;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;

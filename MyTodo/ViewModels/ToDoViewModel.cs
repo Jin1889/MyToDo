@@ -36,7 +36,7 @@ namespace MyTodo.ViewModels
             IsRightDrawerOpen = true;
         }
 
-        public DelegateCommand AddCommand{ get; private set;}
+        public DelegateCommand AddCommand { get; private set; }
 
         private readonly IToDoService service;
         private ObservableCollection<ToDoDto> toDoDtos;
@@ -57,7 +57,7 @@ namespace MyTodo.ViewModels
             if (todoResult.Status)
             {
                 toDoDtos.Clear();
-                foreach(var item in todoResult.Result.Items)
+                foreach (var item in todoResult.Result.Items)
                 {
                     toDoDtos.Add(item);
                 }
