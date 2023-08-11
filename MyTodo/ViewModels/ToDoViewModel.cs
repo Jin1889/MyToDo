@@ -17,6 +17,7 @@ namespace MyTodo.ViewModels
         public ToDoViewModel(IToDoService service)
         {
             ToDoDtos = new ObservableCollection<ToDoDto>();
+            CreateToDoList();
             AddCommand = new DelegateCommand(Add);
             this.service = service;
             CreateToDoList();
@@ -55,12 +56,10 @@ namespace MyTodo.ViewModels
                 PageSize = 100,
             });
             if (todoResult.Status)
-            {
+        {
                 toDoDtos.Clear();
                 foreach(var item in todoResult.Result.Items)
-                {
-                    toDoDtos.Add(item);
-                }
+            {
             }
         }
     }

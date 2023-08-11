@@ -3,7 +3,11 @@ using MyTodo.Service;
 using MyToDo.Shared.Dtos;
 using Prism.Commands;
 using Prism.Mvvm;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace MyTodo.ViewModels
@@ -13,6 +17,7 @@ namespace MyTodo.ViewModels
         public MemoViewModel(IMemoService service)
         {
             MemoDtos = new ObservableCollection<MemoDto>();
+            CreateToDoList();
             AddCommand = new DelegateCommand(Add);
             this.service = service;
             CreateMemoListAsync();
@@ -51,10 +56,10 @@ namespace MyTodo.ViewModels
                 PageSize = 100,
             });
             if (memoResult.Status)
-            {
+        {
                 memoDtos.Clear();
                 foreach (var item in memoResult.Result.Items)
-                {
+            {
                     memoDtos.Add(item);
                 }
             }
