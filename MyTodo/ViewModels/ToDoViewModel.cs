@@ -55,7 +55,7 @@ namespace MyTodo.ViewModels
                 PageSize = 100,
             });
             if (todoResult.Status)
-            {
+        {
                 toDoDtos.Clear();
                 foreach (var item in todoResult.Result.Items)
                 {
