@@ -83,7 +83,7 @@
                             <Image
                                 Width="25"
                                 Height="25"
-                                Source="../images/user.jpg">
+                                Source="../Images/user.jpg">
                                 <Image.Clip>
                                     <EllipseGeometry
                                         Center="12.5, 12.5"

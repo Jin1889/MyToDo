@@ -57,7 +57,7 @@ namespace MyTodo.Service
         public async Task<ApiResponse<TEntity>> UpdateAsync(TEntity entity)
         {
             BaseRequest request = new BaseRequest();
-            request.Method = RestSharp.Method.Get;
+            request.Method = RestSharp.Method.Post;
             request.Route = $"api/{serviceName}/Update";
             request.Parameter = entity;
             return await client.ExecuteAsync<TEntity>(request);
