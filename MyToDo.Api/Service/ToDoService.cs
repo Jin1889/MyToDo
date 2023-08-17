@@ -72,6 +72,25 @@ namespace MyToDo.Api.Service
             }
         }
 
+        public async Task<ApiResponse> GetAllAsync(ToDoParameter parameter)
+        {
+            try
+            {
+                var repository = work.GetRepository<ToDo>();
+                var todos = await repository.GetPagedListAsync(predicate:
+                   x => (string.IsNullOrWhiteSpace(parameter.Search) ? true : x.Title.Contains(parameter.Search))
+                   && (parameter.Status == null ? true : x.Status.Equals(parameter.Status)),
+                   pageIndex: parameter.PageIndex,
+                   pageSize: parameter.PageSize,
+                   orderBy: source => source.OrderByDescending(t => t.CreateDate));
+                return new ApiResponse(true, todos);
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse(ex.Message);
+            }
+        }
+
         public async Task<ApiResponse> GetSingleAsync(int id)
         {
             try
@@ -85,6 +104,11 @@ namespace MyToDo.Api.Service
             {
                 return new ApiResponse(ex.Message);
             }
+        }
+
+        public Task<ApiResponse> Summary()
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<ApiResponse> UpdateAsync(ToDoDto model)

@@ -1,6 +1,8 @@
 ﻿using MyToDo.Shared.Contact;
 using MyToDo.Shared.Dtos;
 using MyToDo.Shared.Parameters;
+using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,15 +11,23 @@ using System.Threading.Tasks;
 
 namespace MyTodo.Service
 {
-    internal class ToDoService : BaseService<ToDoDto>, IToDoService
+    public class ToDoService : BaseService<ToDoDto>, IToDoService
     {
+        private readonly HttpRestClient client;
         public ToDoService(HttpRestClient client) : base(client, "ToDo")
         {
+            this.client = client;
         }
 
-        public Task<ApiResponse<PagedList<ToDoDto>>> GetAllFilterAsync(ToDoParameter parameter)
+        public async Task<ApiResponse<PagedList<ToDoDto>>> GetAllFilterAsync(ToDoParameter parameter)
         {
-            throw new NotImplementedException();
+            BaseRequest request = new BaseRequest();
+            request.Method = RestSharp.Method.Get;
+            request.Route = $"api/ToDo/GetAll?pageIndex={parameter.PageIndex}" +
+                $"&pageSize={parameter.PageSize}" +
+                $"&search={parameter.Search}" +
+                $"&status={parameter.Status}";
+            return await client.ExecuteAsync<PagedList<ToDoDto>>(request);
         }
     }
 }

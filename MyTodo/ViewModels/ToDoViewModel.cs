@@ -2,6 +2,7 @@
 using MyTodo.Service;
 using MyTodo.Views;
 using MyToDo.Shared.Dtos;
+using MyToDo.Shared.Parameters;
 using Prism.Commands;
 using Prism.Ioc;
 using Prism.Regions;
@@ -26,12 +27,25 @@ namespace MyTodo.ViewModels
 
         private async void Detele(ToDoDto dto)
         {
-            var deleteResult = await service.DeleteAsync(dto.Id);
-            if (deleteResult.Status)
+            try
             {
-                var model = ToDoDtos.FirstOrDefault(t => t.Id.Equals(dto.Id));
-                if (model != null)
-                    ToDoDtos.Remove(model);
+                UpdateLoading(true);
+
+                var deleteResult = await service.DeleteAsync(dto.Id);
+                if (deleteResult.Status)
+                {
+                    var model = ToDoDtos.FirstOrDefault(t => t.Id.Equals(dto.Id));
+                    if (model != null)
+                        ToDoDtos.Remove(model);
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                UpdateLoading(false);
             }
         }
 
@@ -44,6 +58,16 @@ namespace MyTodo.ViewModels
                 case "保存": Save(); break;
             }
         }
+
+        //筛选
+        private int selectedIndex;
+
+        public int SelectedIndex
+        {
+            get { return selectedIndex; }
+            set { selectedIndex = value; RaisePropertyChanged(); }
+        }
+
 
         //搜索
         private string search;
@@ -99,16 +123,16 @@ namespace MyTodo.ViewModels
                             todo.Title = CurrentDto.Title;
                             todo.Content = CurrentDto.Content;
                             todo.Status = CurrentDto.Status;
+                            IsRightDrawerOpen = false;
                         }
                     }
-                    IsRightDrawerOpen = false;
                 }
                 else
                 {
                     var addResult = await service.AddAsync(CurrentDto);
                     if (addResult.Status)
                     {
-                        ToDoDtos.Add(CurrentDto);
+                        ToDoDtos.Add(addResult.Result);
                         isRightDrawerOpen = false;
                     }
                 }
@@ -164,11 +188,15 @@ namespace MyTodo.ViewModels
         async void GetDataAsync()
         {
             UpdateLoading(true);
-            var todoResult = await service.GetAllAsync(new MyToDo.Shared.Parameters.QueryParameter()
+
+            int? Status = SelectedIndex == 0 ? null : SelectedIndex == 2 ? 1 : 0;
+
+            var todoResult = await service.GetAllFilterAsync(new ToDoParameter()
             {
                 PageIndex = 0,
                 PageSize = 100,
                 Search = Search,
+                Status = Status
             });
             if (todoResult.Status)
             {
