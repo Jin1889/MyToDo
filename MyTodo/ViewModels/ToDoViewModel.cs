@@ -134,6 +134,7 @@ namespace MyTodo.ViewModels
                     {
                         ToDoDtos.Add(addResult.Result);
                         isRightDrawerOpen = false;
+                        RaisePropertyChanged(nameof(isRightDrawerOpen));
                     }
                 }
             }

@@ -1,7 +1,10 @@
 ﻿using DryIoc;
+using MyTodo.Common;
 using MyTodo.Service;
 using MyTodo.ViewModels;
+using MyTodo.ViewModels.Dialogs;
 using MyTodo.Views;
+using MyTodo.Views.Dialogs;
 using Prism.DryIoc;
 using Prism.Ioc;
 using System;
@@ -24,6 +27,14 @@ namespace MyTodo
             return Container.Resolve<MainView>();
         }
 
+        protected override void OnInitialized()
+        {
+            var service = Current.MainWindow.DataContext as IConfigureService;
+            if (service != null)
+                service.Configure();
+            base.OnInitialized();
+        }
+
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.GetContainer()
@@ -32,6 +43,10 @@ namespace MyTodo
 
             containerRegistry.Register<IToDoService, ToDoService>();
             containerRegistry.Register<IMemoService, MemoService>();
+
+            containerRegistry.RegisterDialog<AddToDoView, AddToDoViewModel>();
+            containerRegistry.RegisterDialog<AddMemoView, AddMemoViewModel>();
+
             //界面注册
             containerRegistry.RegisterForNavigation<IndexView, IndexViewModel>();
             containerRegistry.RegisterForNavigation<ToDoView, ToDoViewModel>();

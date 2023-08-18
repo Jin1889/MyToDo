@@ -125,8 +125,9 @@ namespace MyTodo.ViewModels
                     var addResult = await service.AddAsync(CurrentDto);
                     if (addResult.Status)
                     {
-                        MemoDtos.Add(CurrentDto);
+                        MemoDtos.Add(addResult.Result);
                         isRightDrawerOpen = false;
+                        RaisePropertyChanged(nameof(isRightDrawerOpen));
                     }
                 }
             }
