@@ -28,7 +28,7 @@
                 DockPanel.Dock="Top"
                 Orientation="Horizontal">
                 <TextBlock VerticalAlignment="Center" Text="状态：" />
-                <ComboBox SelectedIndex="0">
+                <ComboBox Margin="10,0,0,0" SelectedIndex="{Binding Model.Status}">
                     <ComboBoxItem>待办</ComboBoxItem>
                     <ComboBoxItem>已完成</ComboBoxItem>
                 </ComboBox>
@@ -37,7 +37,8 @@
             <TextBox
                 Margin="20,0"
                 md:HintAssist.Hint="请输入待办概要"
-                DockPanel.Dock="Top" />
+                DockPanel.Dock="Top"
+                Text="{Binding Model.Title}" />
 
             <TextBox
                 MinHeight="100"
@@ -45,6 +46,7 @@
                 md:HintAssist.Hint="请输入待办内容"
                 AcceptsReturn="True"
                 DockPanel.Dock="Top"
+                Text="{Binding Model.Content}"
                 TextWrapping="Wrap" />
         </DockPanel>
 
@@ -55,9 +57,10 @@
             Orientation="Horizontal">
             <Button
                 Margin="0,0,10,0"
+                Command="{Binding CancelCommand}"
                 Content="取消"
                 Style="{StaticResource MaterialDesignOutlinedButton}" />
-            <Button Content="确定" />
+            <Button Command="{Binding SaveCommand}" Content="确定" />
         </StackPanel>
     </Grid>
 </UserControl>

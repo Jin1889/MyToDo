@@ -1,6 +1,5 @@
 ﻿using MaterialDesignThemes.Wpf;
 using MyTodo.Common;
-using MyToDo.Shared.Dtos;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -10,14 +9,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyTodo.ViewModels.Dialogs
+namespace MyTodo.ViewModels
 {
-    public class AddToDoViewModel : BindableBase, IDialogHostAware
+    public class MsgViewModel : BindableBase, IDialogHostAware
     {
-        public AddToDoViewModel()
+        public MsgViewModel()
         {
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
+        }
+
+        private string title;
+
+        public string Title
+        {
+            get { return title; }
+            set { title = value; RaisePropertyChanged(); }
+        }
+
+        private string content;
+
+        public string Content
+        {
+            get { return content; }
+            set { content = value; RaisePropertyChanged(); }
         }
 
         private void Cancel()
@@ -28,41 +43,24 @@ namespace MyTodo.ViewModels.Dialogs
 
         private void Save()
         {
-            if (string.IsNullOrWhiteSpace(Model.Title) ||
-                string.IsNullOrWhiteSpace(model.Content)) return;
-
             if (DialogHost.IsDialogOpen(DialogHostName))
             {
-                //确定时,把编辑的实体返回并且返回OK
                 DialogParameters param = new DialogParameters();
-                param.Add("Value", Model);
                 DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
             }
         }
 
-        private ToDoDto model;
-
-        /// <summary>
-        /// 新增或编辑的实体
-        /// </summary>
-        public ToDoDto Model
-        {
-            get { return model; }
-            set { model = value; RaisePropertyChanged(); }
-        }
-
-        public string DialogHostName { get; set; }
+        public string DialogHostName { get; set; } = "Root";
         public DelegateCommand SaveCommand { get; set; }
         public DelegateCommand CancelCommand { get; set; }
 
         public void OnDialogOpend(IDialogParameters parameters)
         {
-            if (parameters.ContainsKey("Value"))
-            {
-                Model = parameters.GetValue<ToDoDto>("Value");
-            }
-            else
-                Model = new ToDoDto();
+            if (parameters.ContainsKey("Title"))
+                Title = parameters.GetValue<string>("Title");
+
+            if (parameters.ContainsKey("Content"))
+                Content = parameters.GetValue<string>("Content");
         }
     }
 }

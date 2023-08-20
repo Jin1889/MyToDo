@@ -1,27 +1,30 @@
-﻿using MyTodo.Common.Models;
+﻿using MyTodo.Common;
+using MyTodo.Service;
+using MyTodo.Views;
+using MyToDo.Shared.Dtos;
 using Prism.Commands;
-using Prism.Mvvm;
+using Prism.Ioc;
 using Prism.Services.Dialogs;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MyTodo.ViewModels
 {
-    public class IndexViewModel : BindableBase
+    public class IndexViewModel : NavigationViewModel
     {
-        private readonly IDialogService dialog;
+        private readonly IToDoService toDoService;
+        private readonly IMemoService memoService;
+        private readonly IDialogHostService dialog;
 
-        public IndexViewModel(IDialogService dialog)
+        public IndexViewModel(IContainerProvider provider, IDialogHostService dialog) : base(provider)
         {
             CreateTaskBars();
-            TaskBars = new ObservableCollection<TaskBar>();
+            //TaskBars = new ObservableCollection<TaskBar>();
             ToDoDtos = new ObservableCollection<ToDoDto>();
             MemoDtos = new ObservableCollection<MemoDto>();
-            ExecuteCommand = new DelegateCommand<string>(Execute);
+            ExecuteCommand = new DelegateCommand<string>(Execute); 
+            this.toDoService = provider.Resolve<IToDoService>();
+            this.memoService = provider.Resolve<IMemoService>();
             this.dialog = dialog;
         }
 
@@ -38,9 +41,9 @@ namespace MyTodo.ViewModels
 
         #region 属性
         //任务栏
-        private ObservableCollection<TaskBar> taskBars;
+        private ObservableCollection<Common.Models.TaskBar> taskBars;
 
-        public ObservableCollection<TaskBar> TaskBars
+        public ObservableCollection<Common.Models.TaskBar> TaskBars
         {
             get { return taskBars; }
             set { taskBars = value; RaisePropertyChanged(); }
@@ -63,23 +66,71 @@ namespace MyTodo.ViewModels
         }
         #endregion
 
-        void AddToDo()
+        async Task AddToDo()
         {
-            dialog.ShowDialog("AddToDoView");
+            var dialogResult = await dialog.ShowDialog("AddToDoView", null);
+            if (dialogResult.Result == ButtonResult.OK)
+            {
+                try
+                {
+                    UpdateLoading(true);
+                    var todo = dialogResult.Parameters.GetValue<ToDoDto>("Value");
+                    if (todo.Id > 0)
+                    {
+                        
+                    }
+                    else
+                    {
+                        var addResult = await toDoService.AddAsync(todo);
+                        if (addResult.Status)
+                        {
+                            ToDoDtos.Add(addResult.Result);
+                        }
+                    }
+                }
+                finally
+                {
+                    UpdateLoading(false);
+                }
+            }
         }
 
-        void AddMemo()
+        async void AddMemo()
         {
-            dialog.ShowDialog("AddMemoView");
+            var dialogResult = await dialog.ShowDialog("AddMemoView", null);
+            if (dialogResult.Result == ButtonResult.OK)
+            {
+                try
+                {
+                    UpdateLoading(true);
+                    var memo = dialogResult.Parameters.GetValue<MemoDto>("Value");
+                    if (memo.Id > 0)
+                    {
+
+                    }
+                    else
+                    {
+                        var addResult = await memoService.AddAsync(memo);
+                        if (addResult.Status)
+                        {
+                            MemoDtos.Add(addResult.Result);
+                        }
+                    }
+                }
+                finally
+                {
+                    UpdateLoading(false);
+                }
+            }
         }
 
         void CreateTaskBars()
         {
-            TaskBars = new ObservableCollection<TaskBar>();
-            TaskBars.Add(new TaskBar() { Icon = "ClockFast", Title = "汇总", Content = "9", Color = "#FF0CA0FF", Target = "" });
-            TaskBars.Add(new TaskBar() { Icon = "ClockCheckOutline", Title = "已完成", Content = "9", Color = "#FF1ECA3A", Target = "" });
-            TaskBars.Add(new TaskBar() { Icon = "ChartLineVariant", Title = "完成比例", Content = "100%", Color = "#FF02C6DC", Target = "" });
-            TaskBars.Add(new TaskBar() { Icon = "PlaylistStar", Title = "备忘录", Content = "19", Color = "#FFFFA000", Target = "" });
+            TaskBars = new ObservableCollection<Common.Models.TaskBar>();
+            TaskBars.Add(new Common.Models.TaskBar() { Icon = "ClockFast", Title = "汇总", Content = "9", Color = "#FF0CA0FF", Target = "" });
+            TaskBars.Add(new Common.Models.TaskBar() { Icon = "ClockCheckOutline", Title = "已完成", Content = "9", Color = "#FF1ECA3A", Target = "" });
+            TaskBars.Add(new Common.Models.TaskBar() { Icon = "ChartLineVariant", Title = "完成比例", Content = "100%", Color = "#FF02C6DC", Target = "" });
+            TaskBars.Add(new Common.Models.TaskBar() { Icon = "PlaylistStar", Title = "备忘录", Content = "19", Color = "#FFFFA000", Target = "" });
         }
     }
 }

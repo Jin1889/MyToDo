@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using MyTodo.Common;
 using MyTodo.Extensions;
 using Prism.Events;
 
@@ -10,7 +11,8 @@ namespace MyTodo.Views
     /// </summary>
     public partial class MainView : Window
     {
-        public MainView(IEventAggregator aggregator)
+        private readonly IDialogHostService dialogHostService;
+        public MainView(IEventAggregator aggregator, IDialogHostService dialogHostService)
         {
             InitializeComponent();
 
@@ -34,6 +36,8 @@ namespace MyTodo.Views
             };
             btnClose.Click += async (s, e) =>
             {
+                var dialogResult = await dialogHostService.Question("温馨提示", "确认退出系统?");
+                if (dialogResult.Result != Prism.Services.Dialogs.ButtonResult.OK) return;
                 this.Close();
             };
             ColorZone.MouseMove += (s, e) =>
