@@ -13,7 +13,7 @@ namespace MyToDo.Shared.Dtos
 		public string UserName
 		{
 			get { return userName; }
-			set { userName = value; OnPerpertyChanged(); }
+			set { userName = value; OnPropertyChanged(); }
 		}
 
 		private string account;
@@ -21,7 +21,7 @@ namespace MyToDo.Shared.Dtos
 		public string Account
 		{
 			get { return account; }
-			set { account = value; OnPerpertyChanged(); }
+			set { account = value; OnPropertyChanged(); }
 		}
 
 		private string passWord;
@@ -29,7 +29,7 @@ namespace MyToDo.Shared.Dtos
 		public string PassWord
 		{
 			get { return passWord; }
-			set { passWord = value; OnPerpertyChanged(); }
+			set { passWord = value; OnPropertyChanged(); }
 		}
 
 	}

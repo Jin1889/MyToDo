@@ -18,7 +18,7 @@ namespace MyToDo.Shared.Dtos
         /// 实现通知更新
         /// </summary>
         /// <param name="propertyName"></param>
-        public void OnPerpertyChanged([CallerMemberName] string propertyName = "")
+        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

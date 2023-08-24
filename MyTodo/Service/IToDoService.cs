@@ -14,6 +14,6 @@ namespace MyTodo.Service
     {
         Task<ApiResponse<PagedList<ToDoDto>>> GetAllFilterAsync(ToDoParameter parameter);
 
-        //Task<ApiResponse<SummaryDto>> SummaryAsync();
+        Task<ApiResponse<SummaryDto>> SummaryAsync();
     }
 }

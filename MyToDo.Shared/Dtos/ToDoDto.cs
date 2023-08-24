@@ -17,17 +17,17 @@ namespace MyToDo.Shared.Dtos
         public string Title
         {
             get { return title; }
-            set { title = value; OnPerpertyChanged(); }
+            set { title = value; OnPropertyChanged(); }
         }
         public string Content
         {
             get { return content; }
-            set { content = value; OnPerpertyChanged(); }
+            set { content = value; OnPropertyChanged(); }
         }
         public int Status
         {
             get { return status; }
-            set { status = value; OnPerpertyChanged(); }
+            set { status = value; OnPropertyChanged(); }
         }
     }
 }
