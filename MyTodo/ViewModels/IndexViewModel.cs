@@ -77,6 +77,7 @@ namespace MyTodo.ViewModels
                         summary.CompletedRatio = (summary.CompletedCount / (double)summary.Sum).ToString("0%");
                         this.Refresh();
                     }
+                    aggregator.SendMessage("已完成");
                 }
             }
             finally

@@ -14,7 +14,7 @@ namespace MyTodo.Views
     public class NavigationViewModel : BindableBase, INavigationAware
     {
         private readonly IContainerProvider containerProvider;
-        private readonly IEventAggregator aggregator;
+        public readonly IEventAggregator aggregator;
 
         public NavigationViewModel(IContainerProvider containerProvider)
         {

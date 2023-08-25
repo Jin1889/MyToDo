@@ -16,6 +16,12 @@ namespace MyTodo.Views
         {
             InitializeComponent();
 
+            //注册提示消息
+            aggregator.ResgiterMessage(arg =>
+            {
+                Snackbar.MessageQueue.Enqueue(arg);
+            });
+
             //注册等待消息窗口
             aggregator.Register(arg =>
             {
