@@ -13,7 +13,7 @@ namespace MyTodo.Common.Events
         public string Message { get; set; }
     }
 
-    public class MessageEvent : PubSubEvent<string>
+    public class MessageEvent : PubSubEvent<MessageModel>
     {
     }
 }

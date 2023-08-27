@@ -23,18 +23,20 @@ namespace MyTodo.Service
 
         public async Task<ApiResponse> ExecuteAsync(BaseRequest baseRequest)
         {
-            var request = new RestRequest(new Uri(apiUrl + baseRequest.Route), baseRequest.Method);
-            request.AddHeader("Content-Type", baseRequest.ContentType);
-            if (baseRequest.Parameter != null)
-                request.AddParameter("param", JsonConvert.SerializeObject(baseRequest.Parameter), ParameterType.RequestBody);
+            var request = new RestRequest(apiUrl + baseRequest.Route, baseRequest.Method);
+            //request.AddHeader("Content-Type", baseRequest.ContentType);
+            //if (baseRequest.Parameter != null)
+            //    request.AddParameter("param", JsonConvert.SerializeObject(baseRequest.Parameter), ParameterType.RequestBody);
             //client.BuildUri(request);
+            if (baseRequest.Parameter != null)
+                request.AddJsonBody(JsonConvert.SerializeObject(baseRequest.Parameter));
             var response = await client.ExecuteAsync(request);
             return JsonConvert.DeserializeObject<ApiResponse>(response.Content);
         }
 
         public async Task<ApiResponse<T>> ExecuteAsync<T>(BaseRequest baseRequest)
         {
-            var request = new RestRequest(new Uri(apiUrl + baseRequest.Route), baseRequest.Method);
+            var request = new RestRequest(apiUrl + baseRequest.Route, baseRequest.Method);
             //request.AddHeader("Content-Type", baseRequest.ContentType);
             //if (baseRequest.Parameter != null)
             //    request.AddParameter("param", JsonConvert.SerializeObject(baseRequest.Parameter), ParameterType.RequestBody);
