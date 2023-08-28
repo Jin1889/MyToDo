@@ -2,6 +2,7 @@
 using MyTodo.Common.Models;
 using MyTodo.Extensions;
 using Prism.Commands;
+using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
@@ -15,11 +16,10 @@ namespace MyTodo.ViewModels
 {
     public class MainViewModel : BindableBase, IConfigureService
     {
-        public MainViewModel(IRegionManager regionManager)
+        public MainViewModel(IContainerProvider containerProvider, IRegionManager regionManager)
         {
             MenuBars = new ObservableCollection<MenuBar>();
             NavigateCommand = new DelegateCommand<MenuBar>(Navigate);
-            this.regionManager = regionManager;
             GoBackCommand = new DelegateCommand(() =>
             {
                 if (journal != null && journal.CanGoBack)
@@ -34,6 +34,13 @@ namespace MyTodo.ViewModels
                     journal.GoForward();
                 }
             });
+            LoginOutCommand = new DelegateCommand(() =>
+            {
+                //注销当前用户
+                App.LoginOut(containerProvider);
+            });
+            this.containerProvider = containerProvider;
+            this.regionManager = regionManager;
         }
 
         private void Navigate(MenuBar obj)
@@ -50,10 +57,21 @@ namespace MyTodo.ViewModels
         //前进、后退command
         public DelegateCommand GoBackCommand { get; private set; }
         public DelegateCommand GoForwardCommand { get; private set; }
+        public DelegateCommand LoginOutCommand { get; private set; }
         //区域导航
         private readonly IRegionManager regionManager;
         //区域导航日志
         private IRegionNavigationJournal journal;
+        private readonly IContainerProvider containerProvider;
+
+        private string userName;
+
+        public string UserName
+        {
+            get { return userName; }
+            set { userName = value; RaisePropertyChanged(); }
+        }
+
         private ObservableCollection<MenuBar> menuBars;
 
         public ObservableCollection<MenuBar> MenuBars
@@ -75,6 +93,7 @@ namespace MyTodo.ViewModels
         /// </summary>
         public void Configure()
         {
+            UserName = AppSession.UserName;
             CreateMenuBar();
             regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate("IndexView");
         }

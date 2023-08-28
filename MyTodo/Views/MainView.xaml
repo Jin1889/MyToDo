@@ -46,7 +46,7 @@
                         <TextBlock
                             Margin="0,10"
                             HorizontalAlignment="Center"
-                            Text="金珵" />
+                            Text="{Binding UserName}" />
                     </StackPanel>
 
                     <ListBox
@@ -55,7 +55,7 @@
                         ItemsSource="{Binding MenuBars}">
                         <behaviors:Interaction.Triggers>
                             <behaviors:EventTrigger EventName="SelectionChanged">
-                                <behaviors:InvokeCommandAction Command="{Binding NavigateCommand}" CommandParameter="{Binding ElementName=menuBar, Path=SelectedItem}" />
+                                <behaviors:InvokeCommandAction Command="{Binding NavigateCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}}" />
                             </behaviors:EventTrigger>
                         </behaviors:Interaction.Triggers>
                         <ListBox.ItemTemplate>
@@ -73,33 +73,24 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
-                    <RowDefinition />
+                    <RowDefinition Height="65*" />
+                    <RowDefinition Height="634*" />
                 </Grid.RowDefinitions>
 
                 <materialDesign:Snackbar
                     x:Name="Snackbar"
+                    Grid.Row="1"
+                    VerticalAlignment="Top"
                     Panel.ZIndex="1"
                     MessageQueue="{materialDesign:MessageQueue}" />
                 <materialDesign:ColorZone
                     x:Name="ColorZone"
                     Padding="16"
+                    VerticalAlignment="Center"
                     materialDesign:ElevationAssist.Elevation="Dp4"
-                    DockPanel.Dock="Top"
                     Mode="PrimaryMid">
                     <DockPanel LastChildFill="True">
                         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
-                            <Image
-                                Width="25"
-                                Height="25"
-                                Source="../Images/user.jpg">
-                                <Image.Clip>
-                                    <EllipseGeometry
-                                        Center="12.5, 12.5"
-                                        RadiusX="12.5"
-                                        RadiusY="12.5" />
-                                </Image.Clip>
-                            </Image>
-
                             <Button
                                 x:Name="btnMin"
                                 Content="-"
@@ -113,6 +104,26 @@
                                 Content="×"
                                 Style="{StaticResource MaterialDesignFlatMidBgButton}" />
                         </StackPanel>
+                        <materialDesign:PopupBox DockPanel.Dock="Right">
+                            <materialDesign:PopupBox.ToggleContent>
+                                <Image
+                                    Width="25"
+                                    Height="25"
+                                    Source="/Images/user.jpg">
+                                    <Image.Clip>
+                                        <EllipseGeometry
+                                            Center="12.5,12.5"
+                                            RadiusX="12.5"
+                                            RadiusY="12.5" />
+                                    </Image.Clip>
+                                </Image>
+                            </materialDesign:PopupBox.ToggleContent>
+
+                            <StackPanel>
+                                <!--<Button Command="{Binding AppCenterCommand}" Content="个人中心"/>-->
+                                <Button Command="{Binding LoginOutCommand}" Content="注销当前账户" />
+                            </StackPanel>
+                        </materialDesign:PopupBox>
 
                         <StackPanel Orientation="Horizontal">
                             <ToggleButton
@@ -152,7 +163,10 @@
                     </DockPanel>
                 </materialDesign:ColorZone>
 
-                <ContentControl Grid.Row="1" prism:RegionManager.RegionName="{x:Static ext:PrismManager.MainViewRegionName}" />
+                <ContentControl
+                    Grid.Row="1"
+                    Grid.RowSpan="2"
+                    prism:RegionManager.RegionName="{x:Static ext:PrismManager.MainViewRegionName}" />
             </Grid>
         </materialDesign:DrawerHost>
     </materialDesign:DialogHost>

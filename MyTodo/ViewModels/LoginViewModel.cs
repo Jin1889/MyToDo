@@ -1,4 +1,5 @@
-﻿using MyTodo.Extensions;
+﻿using MyTodo.Common;
+using MyTodo.Extensions;
 using MyTodo.Service;
 using MyToDo.Shared.Dtos;
 using Prism.Commands;
@@ -141,6 +142,7 @@ namespace MyTodo.ViewModels
 
             if (loginResult != null && loginResult.Status)
             {
+                AppSession.UserName = loginResult.Result.UserName;
                 RequestClose?.Invoke(new DialogResult(ButtonResult.OK));
             }
             else

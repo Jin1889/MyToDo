@@ -36,7 +36,7 @@ namespace MyTodo
             {
                 if (callback.Result != ButtonResult.OK)
                 {
-                    Application.Current.Shutdown();
+                    Environment.Exit(0);
                     return;
                 }
 
@@ -44,6 +44,24 @@ namespace MyTodo
                 if (service != null)
                     service.Configure();
                 base.OnInitialized();
+            });
+        }
+
+        public static void LoginOut(IContainerProvider containerProvider)
+        {
+            Current.MainWindow.Hide();
+
+            var dialog = containerProvider.Resolve<IDialogService>();
+
+            dialog.ShowDialog("LoginView", callback =>
+            {
+                if (callback.Result != ButtonResult.OK)
+                {
+                    Environment.Exit(0);
+                    return;
+                }
+
+                Current.MainWindow.Show();
             });
         }
 
